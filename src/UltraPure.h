@@ -60,6 +60,11 @@ typedef enum{
 	AQUA
 }led_color_t;
 
+typedef enum{
+	SENSOR_1,
+	SENSOR_2
+}sensor_id_t;
+
 
 typedef struct{
 	pump_status_t 	pump;
@@ -69,8 +74,7 @@ typedef struct{
 
 
 void ultra_pure_init( void );
-void sensor_1_monitor( void );
-void sensor_2_monitor( void );
+void sensor_monitor( sensor_id_t sensor_id );
 void pump_monitor( void );
 void led_control( void );
 

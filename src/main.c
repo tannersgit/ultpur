@@ -46,16 +46,6 @@ SOFTWARE.
 */
 int main(void)
 {
-	FLASH -> ACR |= FLASH_ACR_LATENCY;						//Set the flash latency to one wait state, required to allow sufficient flash access time when system clock is greater than 24MHz
-
-	RCC -> CFGR &= ~RCC_CFGR_PLLSRC;						//Configure PLL input as the high speed internal clock (HSI 8MHz) divided by two.
-	RCC -> CFGR |= RCC_CFGR_PLLMUL12;						//Configure PLL output to multiply the input by 12 (48MHz).
-	RCC -> CR 	|= RCC_CR_PLLON;							//Enable PLL.
-	while( !(RCC -> CR & RCC_CR_PLLRDY) );					//Wait until the PLL has stabilized, indicated by the PLL Ready flag.
-	RCC -> CFGR &= ~RCC_CFGR_SW;							//Clear System Clock Selection Bits
-	RCC -> CFGR |= RCC_CFGR_SW_1;							//Select PLL output as System Clock
-	while( !(RCC -> CFGR & RCC_CFGR_SWS_1) );				//Wait until PLL is established as the system clock
-	SysTick_Config( 48E6 / (2 * MEASUREMENT_FREQUENCY) );	//Enable SysTick interrupts 2000 times per second.
 
 	ultra_pure_init();
 
@@ -73,11 +63,11 @@ void SysTick_Handler( void )
 
 	if( (counter % 200) < 100 )
 	{
-		sensor_1_monitor();
+		sensor_monitor( SENSOR_1 );
 	}
 	else
 	{
-		sensor_2_monitor();
+		sensor_monitor( SENSOR_2 );
 	}
 
 	pump_monitor();
@@ -86,3 +76,4 @@ void SysTick_Handler( void )
 
 	counter++;
 }
+
